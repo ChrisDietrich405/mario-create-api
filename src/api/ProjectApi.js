@@ -7,6 +7,26 @@ app.use(cors({ origin: ["http://localhost:3009", "http://127.0.0.1:5173"] }));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+var mysql = require('mysql');
+var conexion= mysql.createConnection({
+    host : 'localhost',
+    database : 'mario',
+    user : 'root', 
+    password : 'secret',
+});
+
+conexion.connect(function(err) {
+    if (err) {
+        console.error('Error de conexion: ' + err.stack);
+        return;
+    }
+    console.log('Conectado con el identificador ' + conexion.threadId);
+});
+
+
+
+
 let user = [{ firstName: "chris", lastName: "mario", id: 1}];
 
 let response = {
@@ -44,14 +64,9 @@ app.post("/user", function (req, res) {
       codigo: 502,
       mensaje: "El campo nombre y apellido son requeridos",
     };
+    
   } else {
-    /*if(usuario.nombre !== '' || usuario.apellido !== '') {
-      respuesta = {
-       error: true,
-       codigo: 503,
-       mensaje: 'El usuario ya fue creado previamente'
-      };
-     } else {*/
+
     user.push({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
@@ -62,7 +77,7 @@ app.post("/user", function (req, res) {
       mensaje: "Usuario creado",
       response: user,
     };
-    /* }*/
+    
   }
 
   res.send(response);
@@ -71,3 +86,5 @@ app.post("/user", function (req, res) {
 app.listen(3009, () => {
   console.log("El servidor está inicializado en el puerto 3009");
 });
+
+
