@@ -9,16 +9,16 @@ export default function App() {
   const [lastName, setLastName] = useState("");
   const [fullNames, setFullNames] = useState([]);
   const [firstUser, setFirstUser] = useState([]);
-   
+
   const getFirstUser = async () => {
-    const response = await axios.get(`${baseURL}`)
-    const data = await response.data.response
-    setFirstUser(data)
-  }
+    const response = await axios.get(`${baseURL}`);
+    const data = await response.data.response;
+    setFirstUser(data);
+  };
 
   useEffect(() => {
-    getFirstUser()
-  }, [])
+    getFirstUser();
+  }, []);
 
   const firstNameRef = useRef(null);
   const lastNameRef = useRef(null);
@@ -31,6 +31,7 @@ export default function App() {
       lastName: lastNameRef.current.value,
     };
     setFullNames([...fullNames, data]);
+    getFunc();
   };
 
   const getFunc = async () => {
@@ -41,6 +42,8 @@ export default function App() {
     console.log(response.data);
   };
 
+  
+
   useEffect(() => {
     getFunc();
   }, []);
@@ -49,7 +52,7 @@ export default function App() {
     <>
       {firstUser.map((i) => {
         return (
-          <div  >
+          <div>
             <h2>nombre: {i.firstName}</h2>
             <h2>apellido: {i.lastName}</h2>
 

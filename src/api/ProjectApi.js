@@ -8,26 +8,23 @@ app.use(cors({ origin: ["http://localhost:3009", "http://127.0.0.1:5173"] }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var mysql = require('mysql');
-var conexion= mysql.createConnection({
-    host : 'localhost',
-    database : 'mario',
-    user : 'root', 
-    password : 'secret',
+var mysql = require("mysql");
+var conexion = mysql.createConnection({
+  host: "localhost",
+  database: "mario",
+  user: "root",
+  password: "secret",
 });
 
-conexion.connect(function(err) {
-    if (err) {
-        console.error('Error de conexion: ' + err.stack);
-        return;
-    }
-    console.log('Conectado con el identificador ' + conexion.threadId);
+conexion.connect(function (err) {
+  if (err) {
+    console.error("Error de conexion: " + err.stack);
+    return;
+  }
+  console.log("Conectado con el identificador " + conexion.threadId);
 });
 
-
-
-
-let user = [{ firstName: "chris", lastName: "mario", id: 1}];
+let user = [{ firstName: "chris", lastName: "mario", id: 1 }];
 
 let response = {
   error: false,
@@ -64,20 +61,32 @@ app.post("/user", function (req, res) {
       codigo: 502,
       mensaje: "El campo nombre y apellido son requeridos",
     };
-    
   } else {
-
     user.push({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
     });
+
+    conexion.query(
+      "INSERT INTO  USER values(" + firstName + " , " + lastName + ")",
+
+      function (error, results, fields) {
+        if (error) throw error;
+
+        results.forEach((result) => {
+          console.log(result);
+        });
+      }
+    );
+    
+    connection.end();
+
     response = {
       error: false,
       codigo: 200,
       mensaje: "Usuario creado",
       response: user,
     };
-    
   }
 
   res.send(response);
@@ -86,5 +95,3 @@ app.post("/user", function (req, res) {
 app.listen(3009, () => {
   console.log("El servidor está inicializado en el puerto 3009");
 });
-
-
